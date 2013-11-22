@@ -1,0 +1,3 @@
+real cantidadTotal;
+real a;
+int b;

@@ -19,7 +19,15 @@ public class Main {
         // create a parser that feeds off the tokens buffer
         GrammarParser parser = new GrammarParser(tokens);
 
-        ParseTree tree = parser.programa(); // begin parsing at init rule
+        ParseTree tree = parser.programa(); // begin parsing at rule 'programa'
         System.out.println(tree.toStringTree(parser)); // print LISP-style tree
+        
+     	// create a standard ANTLR parse tree walker
+        ParseTreeWalker walker = new ParseTreeWalker();
+        // create listener then feed to walker
+        MyGrammarListener loader = new MyGrammarListener();
+        walker.walk(loader, tree);
+        // walk parse tree
+        System.out.println(loader.props); // print results
     }
 }

@@ -1,13 +1,10 @@
 grammar Grammar;
 
-// Lexer
 
-WSL : [ \t\r\n]+ -> skip ;
+// --- LEXER ---
 
-COMM : '@' ;
-COMMENT
-    : COMM ~[\r\n]* -> skip 
-    ;
+WS : [ \t\r\n]+ -> skip ;
+COMMENT : '@' ~[\r\n]* -> skip ;
 
 SEP : ';' ;
 PAR_AP : '(' ;
@@ -50,18 +47,16 @@ OP_IO : (OP_IN | OP_OUT) ;
 OP_IN : 'in' ;
 OP_OUT : 'out' ;
 
-
-TIPO : (TIPO_INT | TIPO_REAL) ;
+TIPO : TIPO_INT | TIPO_REAL ;
 TIPO_INT : ('i'|'I')('n'|'N')('t'|'T') ;
 TIPO_REAL : ('r'|'R')('e'|'E')('a'|'A')('l'|'L') ;
 
-IDENT : (LETRA | GUION_BAJO) (LETRA | DIGITO | GUION_BAJO)* ;
 
 
-// Parser
+// --- PARSER ---
 
 tipo : TIPO ;
-id : IDENT ;
+id : (LETRA | GUION_BAJO) (LETRA | DIGITO | GUION_BAJO)* ;
 num : DIGITO (DIGITO | CERO)* (PUNTO (DIGITO | CERO)+)?;
 
 
@@ -96,7 +91,7 @@ exp_nv1
     ;
 
 exp_nv2
-    : exp_nv2 OP_COMP exp_nv2 
+    : exp_nv2 OP_COMP exp_nv2
     | exp_nv3
     ;
 
@@ -125,4 +120,3 @@ exp_term
     | id
     | num
     ;
-

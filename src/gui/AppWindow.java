@@ -11,6 +11,8 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import utils.Logs;
+
 public class AppWindow implements ActionListener {
 
 	private JFrame frmPlgEntrega;
@@ -127,9 +129,9 @@ public class AppWindow implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		textAreaCodigo.append("clickkkk" + "\n");
-		textAreaTablaSimbolos.append("clickkkk" + "\n");
-		textAreaMaquinaPila.append("clickkkk" + "\n");
-		textAreaErrores.append("clickkkk" + "\n");
+		textAreaCodigo.append("click");
+		textAreaTablaSimbolos.append(Logs.getSymbolTableLog());
+		textAreaMaquinaPila.append(Logs.getHeapLog());
+		textAreaErrores.append(Logs.getErrorsLog());
 	}
 }

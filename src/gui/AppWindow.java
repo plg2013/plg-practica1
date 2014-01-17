@@ -11,7 +11,11 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import org.antlr.v4.runtime.ANTLRInputStream;
+
 import utils.Logs;
+import cli.CmdLineInterface;
+
 
 public class AppWindow implements ActionListener {
 
@@ -35,6 +39,7 @@ public class AppWindow implements ActionListener {
 				}
 			}
 		});
+		
 	}
 
 	/**
@@ -129,7 +134,14 @@ public class AppWindow implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		textAreaCodigo.append("click");
+		
+		CmdLineInterface cli = new CmdLineInterface();
+		
+		ANTLRInputStream input = new ANTLRInputStream(getTextAreaCodigo().getText());
+		cli.exec(input);
+				
+		textAreaTablaSimbolos.append("Wooooolas");
+		
 		textAreaTablaSimbolos.append(Logs.getSymbolTableLog());
 		textAreaMaquinaPila.append(Logs.getHeapLog());
 		textAreaErrores.append(Logs.getErrorsLog());

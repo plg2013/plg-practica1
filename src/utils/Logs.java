@@ -7,7 +7,6 @@ public class Logs {
 	private static String errorsLog = "";
 
 	public Logs() {
-
 	}
 
 	public static String getSymbolTableLog() {

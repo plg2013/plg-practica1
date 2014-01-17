@@ -3,16 +3,18 @@ package compiler;
 import org.antlr.v4.misc.OrderedHashMap;
 import java.util.Map;
 
+import utils.Logs;
+
 
 public class Compiler extends GrammarBaseListener {
 
     Map<String, Map<String, String>> TS = 
             new OrderedHashMap<String, Map<String, String>>();
     
-    String error = "";
-    String code = "";
-    
     int heap_memory_addr = 0x0;
+    
+    public Compiler() {
+    }
     
     public void exitDec(GrammarParser.DecContext ctx) {
         
@@ -22,7 +24,7 @@ public class Compiler extends GrammarBaseListener {
         String type = ctx.tipo().getText();
         
         if (TS.containsKey(id)) {
-            error += "[W] La variable " + id + " ya se ha declarado previamente\n";
+            Logs.addToErrorsLog("[W] La variable " + id + " ya se ha declarado previamente");
         
         } else {
             Map<String, String> var_attributes =
@@ -42,13 +44,14 @@ public class Compiler extends GrammarBaseListener {
         if (ctx.OP_IO() != null) { // Ensure it is IO expression
             
             if (ctx.id() != null) { // IO with a variable
+            	System.out.println("Var IO");
                 
                 if (TS.containsKey(ctx.id().getText())) {
                     
                     // TODO: Create code
                     
                 } else
-                    error += "[E] Variable " + ctx.id().getText() + " no declarada.\n";
+                    Logs.addToErrorsLog("[E] Variable " + ctx.id().getText() + " no declarada.");
 
                 
                 

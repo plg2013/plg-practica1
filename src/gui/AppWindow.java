@@ -140,10 +140,13 @@ public class AppWindow implements ActionListener {
 		ANTLRInputStream input = new ANTLRInputStream(getTextAreaCodigo().getText());
 		cli.exec(input);
 				
-		textAreaTablaSimbolos.append("Wooooolas");
-		
+		textAreaTablaSimbolos.setText("");
 		textAreaTablaSimbolos.append(Logs.getSymbolTableLog());
-		textAreaMaquinaPila.append(Logs.getHeapLog());
-		textAreaErrores.append(Logs.getErrorsLog());
+		
+		textAreaMaquinaPila.setText("");
+		textAreaMaquinaPila.append(cli.getCompiler().getCode());
+		
+		textAreaErrores.setText("");
+		textAreaErrores.append(cli.getCompiler().getErrors());
 	}
 }

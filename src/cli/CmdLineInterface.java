@@ -15,6 +15,10 @@ import compiler.Compiler;
 public class CmdLineInterface {
 
 	Compiler compiler;
+
+	public Compiler getCompiler() {
+		return compiler;
+	}
 	
 	public void exec(ANTLRInputStream input) {
 
@@ -55,7 +59,7 @@ public class CmdLineInterface {
 		}
 		
 		cli.exec(input);
-		cli.compiler.printTS();
+		//cli.compiler.printTS();
 		
 	}
 };

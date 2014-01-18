@@ -335,7 +335,7 @@ public class Compiler extends GrammarBaseListener {
 				addCode("[Código incompleto por error]");
 
 			} else
-				addCode("desapila-dir( " + TS.get(id).get("mem_addr") + " )");
+				addCode("apila-dir( " + TS.get(id).get("mem_addr") + " )");
 			
 		} else if (ctx.num() != null) {
 		

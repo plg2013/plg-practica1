@@ -87,6 +87,7 @@ public class Compiler extends GrammarBaseListener {
 				if (!TS.containsKey(id)) {
 					addError("[E] Variable '" + id + "' no declarada.");
 					addCode("[Código incompleto por error]");
+					ctx.basic_type = "error";
 				}
 
 				else {
@@ -105,15 +106,15 @@ public class Compiler extends GrammarBaseListener {
 						addError("[E] Operador de E/S no válido.");
 						addCode("[Código incompleto por error]");
 					}
+				
+					ctx.basic_type = TS.get(id).get("type");
+				
 				}
+				
 			} else {
 
 
 				switch(op_io) {
-				case "in":
-					addCode("in");
-					break;
-
 				case "out":
 					if (ctx.asigExpr() != null && ctx.asigExpr().OP_ASIG() != null) {	
 						String id = ctx.asigExpr().id().getText();
@@ -122,14 +123,18 @@ public class Compiler extends GrammarBaseListener {
 					
 					addCode("out");
 					
+					ctx.basic_type = ctx.asigExpr().basic_type;
+					
 					break;
 
 				default:
 					addError("[E] Operador de E/S no válido.");
 					addCode("[Código incompleto por error]");
+					ctx.basic_type = "error";
 				}
 			}
-		}
+		
+		} else
 		
 		ctx.basic_type = ctx.asigExpr().basic_type;
 		
@@ -150,6 +155,7 @@ public class Compiler extends GrammarBaseListener {
 			if (!TS.containsKey(id)) {
 				addError("[E] Variable '" + id + "' no declarada.");
 				addCode("[Código incompleto por error]");
+				ctx.basic_type = "error";
 
 			} else {
 

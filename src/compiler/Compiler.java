@@ -29,6 +29,22 @@ public class Compiler extends GrammarBaseListener {
 	public String getCode() {
 		return code;
 	}
+	
+	public String getTS() {
+		
+		String ts_out = "";
+		
+		for (Map.Entry<String, Map<String, String>> it : TS.entrySet()) {
+			String id = it.getKey();
+			Map<String, String> attr = it.getValue();
+			
+			ts_out += "[" + id + "] mem_addr: 0x" + attr.get("mem_addr") + "\n";
+			ts_out += "  type: " + attr.get("type") + "     value: " + attr.get("value") + "\n\n";
+		}
+		
+		
+		return ts_out;
+	}
 
 	private void addError(String new_error) {
 		errors += new_error + "\n";

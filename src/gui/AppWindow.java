@@ -141,7 +141,7 @@ public class AppWindow implements ActionListener {
 		cli.exec(input);
 				
 		textAreaTablaSimbolos.setText("");
-		textAreaTablaSimbolos.append(Logs.getSymbolTableLog());
+		textAreaTablaSimbolos.append(cli.getCompiler().getTS());
 		
 		textAreaMaquinaPila.setText("");
 		textAreaMaquinaPila.append(cli.getCompiler().getCode());

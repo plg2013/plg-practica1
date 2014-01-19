@@ -25,6 +25,10 @@ public class AppWindow implements ActionListener {
 	private JTextArea textAreaTablaSimbolos;
 	private JTextArea textAreaErrores;
 	
+	private JButton btnCargar;
+	private JButton btnCompilar;
+	private JButton btnExportar;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -59,10 +63,10 @@ public class AppWindow implements ActionListener {
 		frmPlgEntrega.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmPlgEntrega.getContentPane().setLayout(null);
 
-		JButton btnNewButton = new JButton("Compilar");
-		btnNewButton.addActionListener(this);
-		btnNewButton.setBounds(59, 341, 117, 29);
-		frmPlgEntrega.getContentPane().add(btnNewButton);
+		btnCompilar = new JButton("Compilar");
+		btnCompilar.addActionListener(this);
+		btnCompilar.setBounds(62, 341, 117, 29);
+		frmPlgEntrega.getContentPane().add(btnCompilar);
 
 		JLabel lblCodigo = new JLabel("C\u00F3digo");
 		lblCodigo.setBounds(16, 6, 200, 16);
@@ -74,7 +78,7 @@ public class AppWindow implements ActionListener {
 
 		JScrollPane scrollPaneCodigo = new JScrollPane();
 		lblCodigo.setLabelFor(scrollPaneCodigo);
-		scrollPaneCodigo.setBounds(16, 34, 209, 295);
+		scrollPaneCodigo.setBounds(16, 34, 209, 265);
 		frmPlgEntrega.getContentPane().add(scrollPaneCodigo);
 
 		textAreaCodigo = new JTextArea();
@@ -114,6 +118,16 @@ public class AppWindow implements ActionListener {
 		lblErrores.setLabelFor(scrollPaneErrores);
 		lblErrores.setBounds(16, 382, 61, 16);
 		frmPlgEntrega.getContentPane().add(lblErrores);
+		
+		btnCargar = new JButton("Cargar");
+		btnCargar.addActionListener(this);
+		btnCargar.setBounds(16, 300, 99, 29);
+		frmPlgEntrega.getContentPane().add(btnCargar);
+		
+		btnExportar = new JButton("Exportar");
+		btnExportar.addActionListener(this);
+		btnExportar.setBounds(127, 300, 98, 29);
+		frmPlgEntrega.getContentPane().add(btnExportar);
 	}
 
 	public JTextArea getTextAreaCodigo() {
@@ -134,22 +148,33 @@ public class AppWindow implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
-		CmdLineInterface cli = new CmdLineInterface();
-		
-		ANTLRInputStream input = new ANTLRInputStream(getTextAreaCodigo().getText());
-		cli.exec(input);
-				
-		textAreaTablaSimbolos.setText("");
-		textAreaTablaSimbolos.append(cli.getCompiler().getTS());
-		
-		textAreaMaquinaPila.setText("");
-		textAreaMaquinaPila.append(cli.getCompiler().getCode());
-		
-		textAreaErrores.setText("");
-		textAreaErrores.append(Logs.getErrorsLog());
-		
-		Logs.clear(); // Ensure logs are cleared between executions
-		
+		if (e.getSource() == btnCargar) {
+			
+			// Cargar button onclick listener code
+			
+		} else if (e.getSource() == btnExportar) {
+			
+			// Exportar button onclick listener code
+			
+		} else if (e.getSource() == btnCompilar) {
+			
+			// Compilar button onclick listener code
+			
+			CmdLineInterface cli = new CmdLineInterface();
+			
+			ANTLRInputStream input = new ANTLRInputStream(getTextAreaCodigo().getText());
+			cli.exec(input);
+					
+			textAreaTablaSimbolos.setText("");
+			textAreaTablaSimbolos.append(cli.getCompiler().getTS());
+			
+			textAreaMaquinaPila.setText("");
+			textAreaMaquinaPila.append(cli.getCompiler().getCode());
+			
+			textAreaErrores.setText("");
+			textAreaErrores.append(Logs.getErrorsLog());
+			
+			Logs.clear(); // Ensure logs are cleared between executions
+		}
 	}
 }

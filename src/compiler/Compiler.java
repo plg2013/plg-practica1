@@ -38,7 +38,7 @@ public class Compiler extends GrammarBaseListener {
 			String id = it.getKey();
 			Map<String, String> attr = it.getValue();
 			
-			ts_out += "[" + id + "] mem_addr: 0x" + attr.get("mem_addr") + "\n";
+			ts_out += "[ " + id + " ] mem_addr: 0x" + attr.get("mem_addr") + "\n";
 			ts_out += "  type: " + attr.get("type") + "     value: " + attr.get("value") + "\n\n";
 		}
 		
@@ -133,7 +133,7 @@ public class Compiler extends GrammarBaseListener {
 				switch(op_io) {
 				case "out":
 					if (ctx.asigExpr() != null && ctx.asigExpr().OP_ASIG() != null) {	
-						String id = ctx.asigExpr().id().getText();
+						String id = ctx.asigExpr().id().getText().toLowerCase();
 						addCode("apila-dir( " + TS.get(id).get("mem_addr") + " )");
 					}
 					
@@ -179,7 +179,7 @@ public class Compiler extends GrammarBaseListener {
 				
 				ctx.basic_type = TS.get(id).get("type");
 				
-				if (ctx.basic_type == "int" && ctx.asigExpr().basic_type == "real" )
+				if (ctx.basic_type.equals("int") && ctx.asigExpr().basic_type.equals("real") )
 					addError("[W] Se está asignando un tipo 'real' a una variable de tipo 'int'.");
 
 			}
@@ -261,7 +261,7 @@ public class Compiler extends GrammarBaseListener {
 			case "+":
 				addCode("suma");
 
-				if (ctx.left.basic_type == "real" || ctx.right.basic_type == "real")
+				if (ctx.left.basic_type.equals("real") || ctx.right.basic_type.equals("real"))
 					ctx.basic_type = "real";
 				else
 					ctx.basic_type = "int";
@@ -271,7 +271,7 @@ public class Compiler extends GrammarBaseListener {
 			case "-":
 				addCode("resta");
 
-				if (ctx.left.basic_type == "real" || ctx.right.basic_type == "real")
+				if (ctx.left.basic_type.equals("real") || ctx.right.basic_type.equals("real"))
 					ctx.basic_type = "real";
 				else
 					ctx.basic_type = "int";
@@ -281,7 +281,7 @@ public class Compiler extends GrammarBaseListener {
 			case "||":
 				addCode("or");
 
-				if (ctx.left.basic_type != "int" || ctx.right.basic_type != "int")
+				if (!ctx.left.basic_type.equals("int") || !ctx.right.basic_type.equals("int"))
 					addError("[W] Ambos operandos de la unión deben ser de tipo 'int'");
 				
 				ctx.basic_type = "int";
@@ -314,7 +314,7 @@ public class Compiler extends GrammarBaseListener {
 			case "*":
 				addCode("multiplica");
 				
-				if (ctx.left.basic_type == "real" || ctx.right.basic_type == "real")
+				if (ctx.left.basic_type.equals("real") || ctx.right.basic_type.equals("real"))
 					ctx.basic_type = "real";
 				else
 					ctx.basic_type = "int";
@@ -324,7 +324,7 @@ public class Compiler extends GrammarBaseListener {
 			case "/":
 				addCode("divide");
 				
-				if (ctx.left.basic_type == "real" || ctx.right.basic_type == "real")
+				if (ctx.left.basic_type.equals("real") || ctx.right.basic_type.equals("real"))
 					ctx.basic_type = "real";
 				else
 					ctx.basic_type = "int";
@@ -334,7 +334,7 @@ public class Compiler extends GrammarBaseListener {
 			case "%":
 				addCode("modulo");
 				
-				if (ctx.left.basic_type != "int" || ctx.right.basic_type != "int")
+				if (!ctx.left.basic_type.equals("int") || !ctx.right.basic_type.equals("int"))
 					addError("[W] Ambos operandos del operador módulo deben ser de tipo 'int'");
 				
 				ctx.basic_type = "int";
@@ -344,7 +344,7 @@ public class Compiler extends GrammarBaseListener {
 			case "&&":
 				addCode("and");
 				
-				if (ctx.left.basic_type != "int" || ctx.right.basic_type != "int")
+				if (!ctx.left.basic_type.equals("int") || !ctx.right.basic_type.equals("int"))
 					addError("[W] Ambos operandos de la intersección deben ser de tipo 'int'");
 				
 				ctx.basic_type = "int";
@@ -383,7 +383,7 @@ public class Compiler extends GrammarBaseListener {
 			case "!":
 				addCode("not");
 				
-				if (ctx.castExpr().basic_type != "int")
+				if (!ctx.castExpr().basic_type.equals("int"))
 					addError("[W] El operando de la negación lógica debe ser de tipo 'int'");
 				
 				ctx.basic_type = "int";

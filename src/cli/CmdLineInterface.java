@@ -10,6 +10,7 @@ import org.antlr.v4.runtime.tree.*;
 import compiler.GrammarLexer;
 import compiler.GrammarParser;
 import compiler.Compiler;
+import compiler.DescriptiveErrorListener;
 
 
 public class CmdLineInterface {
@@ -23,10 +24,14 @@ public class CmdLineInterface {
 	public void exec(ANTLRInputStream input) {
 
 		GrammarLexer lexer = new GrammarLexer(input);
+//		lexer.removeErrorListeners();
+//		lexer.addErrorListener(DescriptiveErrorListener.INSTANCE);
 
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 
 		GrammarParser parser = new GrammarParser(tokens);
+//		parser.removeErrorListeners();
+//		parser.addErrorListener(DescriptiveErrorListener.INSTANCE);
 
 		ParseTree tree = parser.programa(); // begin parsing at rule 'programa'
 
@@ -59,7 +64,7 @@ public class CmdLineInterface {
 		}
 		
 		cli.exec(input);
-		//cli.compiler.printTS();
+		System.out.println(cli.compiler.getTS());
 		
 	}
 };

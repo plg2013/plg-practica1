@@ -21,7 +21,7 @@ public class DescriptiveErrorListener extends BaseErrorListener {
             sourceName = String.format("%s:%d:%d: ", sourceName, line, charPositionInLine);
         }
 
-        Logs.addError("[Syntax] " + sourceName + "line " + line + ":" + charPositionInLine + " " + msg);
+        Logs.addError("[Syntax] " + sourceName + "Linea " + line + ": " + msg);
     }
 
 }

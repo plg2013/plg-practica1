@@ -283,7 +283,7 @@ public class Compiler extends GrammarBaseListener {
 				addCode("or");
 
 				if (!ctx.left.basic_type.equals("int") || !ctx.right.basic_type.equals("int"))
-					Logs.addError("[Warning] os operandos de la unión deben ser de tipo 'int'");
+					Logs.addError("[Warning] Los operandos de la unión deben ser de tipo 'int'");
 				
 				ctx.basic_type = "int";
 				
@@ -336,7 +336,7 @@ public class Compiler extends GrammarBaseListener {
 				addCode("modulo");
 				
 				if (!ctx.left.basic_type.equals("int") || !ctx.right.basic_type.equals("int"))
-					Logs.addError("[Warning] os operandos del operador módulo deben ser de tipo 'int'");
+					Logs.addError("[Warning] Los operandos del operador módulo deben ser de tipo 'int'");
 				
 				ctx.basic_type = "int";
 				
@@ -346,7 +346,7 @@ public class Compiler extends GrammarBaseListener {
 				addCode("and");
 				
 				if (!ctx.left.basic_type.equals("int") || !ctx.right.basic_type.equals("int"))
-					Logs.addError("[Warning] os operandos de la intersección deben ser de tipo 'int'");
+					Logs.addError("[Warning] Los operandos de la intersección deben ser de tipo 'int'");
 				
 				ctx.basic_type = "int";
 				

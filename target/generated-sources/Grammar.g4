@@ -49,14 +49,20 @@ TIPO_INT : ('i'|'I')('n'|'N')('t'|'T') ;
 TIPO_REAL : ('r'|'R')('e'|'E')('a'|'A')('l'|'L') ;
 
 IDENT : (LETRA | GUION_BAJO) (LETRA | DIGITO | GUION_BAJO)* ;
-NUM : DIGITO (DIGITO | CERO)* (PUNTO (DIGITO | CERO)+)?;
+
+NUM_ENTERO : DIGITO (DIGITO | CERO)* ;
+NUM_REAL : DIGITO (DIGITO | CERO)* (PUNTO (DIGITO | CERO)+)? ;
 
 
 // --- PARSER ---
 
 tipo : TIPO ;
 id : IDENT ;
-num : NUM ;
+
+num returns [String basic_type]
+    : NUM_ENTERO { $basic_type = "int"; }
+    | NUM_REAL { $basic_type = "real"; }
+    ;
 
 
 programa
@@ -79,43 +85,43 @@ acc
     : ioExpr SEP
     ;
 
-ioExpr // IO expr
+ioExpr locals [String basic_type] // IO expr
     : OP_IN id
     | OP_OUT (id | asigExpr)
     | asigExpr
     ;
 
-asigExpr // Asigative expr
+asigExpr locals [String basic_type] // Asigative expr
     : id OP_ASIG asigExpr
     | compExpr
     ;
 
-compExpr // Comparative expr
-    : adiExpr OP_COMP adiExpr 
+compExpr locals [String basic_type] // Comparative expr
+    : left=adiExpr OP_COMP right=adiExpr 
     | adiExpr
     ;
 
-adiExpr // Aditive expr
-    : adiExpr (OP_ADD | OP_SUB | OP_LOGOR) multExpr
+adiExpr locals [String basic_type] // Aditive expr
+    : left=adiExpr (OP_ADD | OP_SUB | OP_LOGOR) right=multExpr
     | multExpr
     ;
 
-multExpr // Multiplicative expr
-    : multExpr OP_MULTI unaryExpr
+multExpr locals [String basic_type] // Multiplicative expr
+    : left=multExpr OP_MULTI right=unaryExpr
     | unaryExpr
     ;
 
-unaryExpr // Unary expr
+unaryExpr locals [String basic_type] // Unary expr
     : (OP_SUB | OP_LOGNOT) castExpr
     | castExpr
     ;
 
-castExpr // Casting expr
+castExpr locals [String basic_type] // Casting expr
     : OP_CAST term
     | term
     ;
 
-term // Terminal
+term locals [String basic_type] // Terminal
     : PAR_AP ioExpr PAR_CI
     | id
     | num

@@ -1,6 +1,7 @@
 package compiler;
 
 import org.antlr.v4.misc.OrderedHashMap;
+
 import java.util.Map;
 
 
@@ -129,12 +130,15 @@ public class Compiler extends GrammarBaseListener {
 				}
 			}
 		}
+		
+		ctx.basic_type = ctx.asigExpr().basic_type;
+		
 	}
 
 
 	public void exitAsigExpr(GrammarParser.AsigExprContext ctx) {
 
-		//	asigExpr // Asigative expr
+		//	asigExpr
 		//	    : id OP_ASIG asigExpr
 		//	    | compExpr
 		//	    ;
@@ -150,21 +154,31 @@ public class Compiler extends GrammarBaseListener {
 			} else {
 
 				addCode("desapila-dir( " + TS.get(id).get("mem_addr") + " )");
+				
+				ctx.basic_type = TS.get(id).get("type");
+				
+				if (ctx.basic_type == "int" && ctx.asigExpr().basic_type == "real" )
+					addError("[W] Se está asignando un tipo 'real' a una variable de tipo 'int'.");
 
 			}
-		}	
+			
+		} else
+			
+			ctx.basic_type = ctx.compExpr().basic_type;
 	}
 
 	public void exitCompExpr(GrammarParser.CompExprContext ctx) {
 
 		//	compExpr
-		//	    : adiExpr OP_COMP adiExpr 
+		//	    : left=adiExpr OP_COMP right=adiExpr 
 		//	    | adiExpr
 		//	    ;
 
 		if (ctx.OP_COMP() != null) {
 
 			String op_comp = ctx.OP_COMP().getText();
+			
+			ctx.basic_type = "int";
 
 			switch(op_comp) {
 			case "<":
@@ -194,14 +208,20 @@ public class Compiler extends GrammarBaseListener {
 			default:
 				addError("[E] Operador de comparación no válido");
 				addCode("[Código incompleto por error]");
+				ctx.basic_type = "error";
 			}	
-		}
+		
+		} else
+			
+			// 'adiExpr(0)' required because both sides of the first alternative are adiExpr
+			ctx.basic_type = ctx.adiExpr(0).basic_type;
+		
 	}
 
 	public void exitAdiExpr(GrammarParser.AdiExprContext ctx) {
 
 		//	adiExpr
-		//	    : adiExpr (OP_ADD | OP_SUB | OP_LOGOR) multExpr
+		//	    : left=adiExpr (OP_ADD | OP_SUB | OP_LOGOR) right=multExpr
 		//	    | multExpr
 		//	    ;
 
@@ -218,27 +238,49 @@ public class Compiler extends GrammarBaseListener {
 			switch(op_adi) {
 			case "+":
 				addCode("suma");
+
+				if (ctx.left.basic_type == "real" || ctx.right.basic_type == "real")
+					ctx.basic_type = "real";
+				else
+					ctx.basic_type = "int";
+					
 				break;
 				
 			case "-":
 				addCode("resta");
+
+				if (ctx.left.basic_type == "real" || ctx.right.basic_type == "real")
+					ctx.basic_type = "real";
+				else
+					ctx.basic_type = "int";
+					
 				break;
 				
 			case "||":
 				addCode("or");
+
+				if (ctx.left.basic_type != "int" || ctx.right.basic_type != "int")
+					addError("[W] Ambos operandos de la unión deben ser de tipo 'int'");
+				
+				ctx.basic_type = "int";
+				
 				break;
 			
 			default:
 				addError("[E] Operador aditivo no válido");
 				addCode("[Código incompleto por error]");
+				ctx.basic_type = "error";
 			}
-		}
+		
+		} else
+			
+			ctx.basic_type = ctx.multExpr().basic_type;
 	}
 	
 	public void exitMultExpr(GrammarParser.MultExprContext ctx) {
 		
 		//	multExpr
-		//	    : multExpr OP_MULTI unaryExpr
+		//	    : left=multExpr OP_MULTI right=unaryExpr
 		//	    | unaryExpr
 		//	    ;
 
@@ -249,25 +291,53 @@ public class Compiler extends GrammarBaseListener {
 			switch(op_multi) {
 			case "*":
 				addCode("multiplica");
+				
+				if (ctx.left.basic_type == "real" || ctx.right.basic_type == "real")
+					ctx.basic_type = "real";
+				else
+					ctx.basic_type = "int";
+					
 				break;
 				
 			case "/":
 				addCode("divide");
+				
+				if (ctx.left.basic_type == "real" || ctx.right.basic_type == "real")
+					ctx.basic_type = "real";
+				else
+					ctx.basic_type = "int";
+					
 				break;
 			
 			case "%":
 				addCode("modulo");
+				
+				if (ctx.left.basic_type != "int" || ctx.right.basic_type != "int")
+					addError("[W] Ambos operandos del operador módulo deben ser de tipo 'int'");
+				
+				ctx.basic_type = "int";
+				
 				break;
 				
 			case "&&":
 				addCode("and");
+				
+				if (ctx.left.basic_type != "int" || ctx.right.basic_type != "int")
+					addError("[W] Ambos operandos de la intersección deben ser de tipo 'int'");
+				
+				ctx.basic_type = "int";
+				
 				break;
 			
 			default:
 				addError("[E] Operador multiplicativo no válido");
 				addCode("[Código incompleto por error]");
+				ctx.basic_type = "error";
 			}
-		}
+		
+		} else
+			
+			ctx.basic_type = ctx.unaryExpr().basic_type;
 	}
 	
 	public void exitUnaryExpr(GrammarParser.UnaryExprContext ctx) {
@@ -285,18 +355,28 @@ public class Compiler extends GrammarBaseListener {
 			switch(op_un) {
 			case "-":
 				addCode("negativo");
+				ctx.basic_type = ctx.castExpr().basic_type;
 				break;
 				
 			case "!":
 				addCode("not");
+				
+				if (ctx.castExpr().basic_type != "int")
+					addError("[W] El operando de la negación lógica debe ser de tipo 'int'");
+				
+				ctx.basic_type = "int";
+				
 				break;
 			
 			default:
 				addError("Operador unario no válido");
 				addCode("[Código incompleto por error]");
+				ctx.basic_type = "error";
 			}
 			
-		}
+		} else
+			
+			ctx.basic_type = ctx.castExpr().basic_type;
 	}
 	
 	public void exitCastExpr(GrammarParser.CastExprContext ctx) {
@@ -313,17 +393,23 @@ public class Compiler extends GrammarBaseListener {
 			switch(op_cast) {
 			case "(int)":
 				addCode("tipo( int )");
+				ctx.basic_type = "int";
 				break;
 				
 			case "(real)":
 				addCode("tipo( real )");
+				ctx.basic_type = "real";
 				break;
 			
 			default:
 				addError("Operador de tipo no válido");
 				addCode("[Código incompleto por error]");
+				ctx.basic_type = "error";
 			}
-		}
+		
+		} else
+			
+			ctx.basic_type = ctx.term().basic_type;
 	}
 	
 	public void exitTerm(GrammarParser.TermContext ctx) {
@@ -345,13 +431,18 @@ public class Compiler extends GrammarBaseListener {
 			} else
 				addCode("apila-dir( " + TS.get(id).get("mem_addr") + " )");
 			
+			ctx.basic_type = TS.get(id).get("type");
+			
 		} else if (ctx.num() != null) {
 		
 			String num = ctx.num().getText();
 			
 			addCode("apila( " + num + " )");
 			
-		}
+			ctx.basic_type = ctx.num().basic_type;
+			
+		} else
+			
+			ctx.basic_type = ctx.ioExpr().basic_type;
 	}
 }
-

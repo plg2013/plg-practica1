@@ -3,6 +3,7 @@ package compiler;
 import org.antlr.v4.misc.OrderedHashMap;
 
 import java.util.Map;
+import utils.Logs;
 
 
 public class Compiler extends GrammarBaseListener {
@@ -46,7 +47,7 @@ public class Compiler extends GrammarBaseListener {
 		return ts_out;
 	}
 
-	private void addError(String new_error) {
+	public void addError(String new_error) {
 		errors += new_error + "\n";
 	}
 
@@ -60,14 +61,14 @@ public class Compiler extends GrammarBaseListener {
 		// dec : tipo id ;
 
 		if (ctx.id() == null || ctx.tipo() == null) 
-			addError("[E] Declaración de variable incorrecta.");
+			Logs.addError("[Error] Declaración de variable incorrecta.");
 
 		else {	
 			String type = ctx.tipo().getText().toLowerCase();
 			String id = ctx.id().getText().toLowerCase();
 
 			if (TS.containsKey(id)) {
-				addError("[W] La variable '" + id + "' ya se ha declarado previamente");
+				Logs.addError("[Warning] La variable '" + id + "' ya se ha declarado previamente");
 
 			} else {
 				Map<String, String> var_attributes =
@@ -101,7 +102,7 @@ public class Compiler extends GrammarBaseListener {
 				String id = ctx.id().getText().toLowerCase();
 
 				if (!TS.containsKey(id)) {
-					addError("[E] Variable '" + id + "' no declarada.");
+					Logs.addError("[Error] Variable '" + id + "' no declarada.");
 					addCode("[Código incompleto por error]");
 					ctx.basic_type = "error";
 				}
@@ -119,7 +120,7 @@ public class Compiler extends GrammarBaseListener {
 						break;
 
 					default:
-						addError("[E] Operador de E/S no válido.");
+						Logs.addError("[Error] Operador de E/S no válido.");
 						addCode("[Código incompleto por error]");
 					}
 				
@@ -144,7 +145,7 @@ public class Compiler extends GrammarBaseListener {
 					break;
 
 				default:
-					addError("[E] Operador de E/S no válido.");
+					Logs.addError("[Error] Operador de E/S no válido.");
 					addCode("[Código incompleto por error]");
 					ctx.basic_type = "error";
 				}
@@ -169,7 +170,7 @@ public class Compiler extends GrammarBaseListener {
 			String id = ctx.id().getText().toLowerCase();
 
 			if (!TS.containsKey(id)) {
-				addError("[E] Variable '" + id + "' no declarada.");
+				Logs.addError("[Error] Variable '" + id + "' no declarada.");
 				addCode("[Código incompleto por error]");
 				ctx.basic_type = "error";
 
@@ -180,7 +181,7 @@ public class Compiler extends GrammarBaseListener {
 				ctx.basic_type = TS.get(id).get("type");
 				
 				if (ctx.basic_type.equals("int") && ctx.asigExpr().basic_type.equals("real") )
-					addError("[W] Se está asignando un tipo 'real' a una variable de tipo 'int'.");
+					Logs.addError("[Warning] Se está asignando un tipo 'real' a una variable de tipo 'int'.");
 
 			}
 			
@@ -228,7 +229,7 @@ public class Compiler extends GrammarBaseListener {
 				break;
 
 			default:
-				addError("[E] Operador de comparación no válido");
+				Logs.addError("[Error] Operador de comparación no válido");
 				addCode("[Código incompleto por error]");
 				ctx.basic_type = "error";
 			}	
@@ -282,14 +283,14 @@ public class Compiler extends GrammarBaseListener {
 				addCode("or");
 
 				if (!ctx.left.basic_type.equals("int") || !ctx.right.basic_type.equals("int"))
-					addError("[W] Ambos operandos de la unión deben ser de tipo 'int'");
+					Logs.addError("[Warning] os operandos de la unión deben ser de tipo 'int'");
 				
 				ctx.basic_type = "int";
 				
 				break;
 			
 			default:
-				addError("[E] Operador aditivo no válido");
+				Logs.addError("[Error] Operador aditivo no válido");
 				addCode("[Código incompleto por error]");
 				ctx.basic_type = "error";
 			}
@@ -335,7 +336,7 @@ public class Compiler extends GrammarBaseListener {
 				addCode("modulo");
 				
 				if (!ctx.left.basic_type.equals("int") || !ctx.right.basic_type.equals("int"))
-					addError("[W] Ambos operandos del operador módulo deben ser de tipo 'int'");
+					Logs.addError("[Warning] os operandos del operador módulo deben ser de tipo 'int'");
 				
 				ctx.basic_type = "int";
 				
@@ -345,14 +346,14 @@ public class Compiler extends GrammarBaseListener {
 				addCode("and");
 				
 				if (!ctx.left.basic_type.equals("int") || !ctx.right.basic_type.equals("int"))
-					addError("[W] Ambos operandos de la intersección deben ser de tipo 'int'");
+					Logs.addError("[Warning] os operandos de la intersección deben ser de tipo 'int'");
 				
 				ctx.basic_type = "int";
 				
 				break;
 			
 			default:
-				addError("[E] Operador multiplicativo no válido");
+				Logs.addError("[Error] Operador multiplicativo no válido");
 				addCode("[Código incompleto por error]");
 				ctx.basic_type = "error";
 			}
@@ -384,14 +385,14 @@ public class Compiler extends GrammarBaseListener {
 				addCode("not");
 				
 				if (!ctx.castExpr().basic_type.equals("int"))
-					addError("[W] El operando de la negación lógica debe ser de tipo 'int'");
+					Logs.addError("[Warning] El operando de la negación lógica debe ser de tipo 'int'");
 				
 				ctx.basic_type = "int";
 				
 				break;
 			
 			default:
-				addError("Operador unario no válido");
+				Logs.addError("Operador unario no válido");
 				addCode("[Código incompleto por error]");
 				ctx.basic_type = "error";
 			}
@@ -424,7 +425,7 @@ public class Compiler extends GrammarBaseListener {
 				break;
 			
 			default:
-				addError("Operador de tipo no válido");
+				Logs.addError("Operador de tipo no válido");
 				addCode("[Código incompleto por error]");
 				ctx.basic_type = "error";
 			}
@@ -447,7 +448,7 @@ public class Compiler extends GrammarBaseListener {
 			String id = ctx.id().getText().toLowerCase();
 			
 			if (!TS.containsKey(id)) {
-				addError("[E] Variable '" + id + "' no declarada.");
+				Logs.addError("[Error] Variable '" + id + "' no declarada.");
 				addCode("[Código incompleto por error]");
 
 			} else

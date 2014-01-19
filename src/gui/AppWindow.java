@@ -147,6 +147,9 @@ public class AppWindow implements ActionListener {
 		textAreaMaquinaPila.append(cli.getCompiler().getCode());
 		
 		textAreaErrores.setText("");
-		textAreaErrores.append(cli.getCompiler().getErrors());
+		textAreaErrores.append(Logs.getErrorsLog());
+		
+		Logs.clear(); // Ensure logs are cleared between executions
+		
 	}
 }

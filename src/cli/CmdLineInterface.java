@@ -24,14 +24,14 @@ public class CmdLineInterface {
 	public void exec(ANTLRInputStream input) {
 
 		GrammarLexer lexer = new GrammarLexer(input);
-//		lexer.removeErrorListeners();
-//		lexer.addErrorListener(DescriptiveErrorListener.INSTANCE);
+		lexer.removeErrorListeners();
+		lexer.addErrorListener(DescriptiveErrorListener.INSTANCE);
 
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 
 		GrammarParser parser = new GrammarParser(tokens);
-//		parser.removeErrorListeners();
-//		parser.addErrorListener(DescriptiveErrorListener.INSTANCE);
+		parser.removeErrorListeners();
+		parser.addErrorListener(DescriptiveErrorListener.INSTANCE);
 
 		ParseTree tree = parser.programa(); // begin parsing at rule 'programa'
 

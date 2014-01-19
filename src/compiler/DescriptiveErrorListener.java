@@ -2,6 +2,9 @@ package compiler;
 
 import org.antlr.v4.runtime.*;
 
+import utils.Logs;
+
+
 public class DescriptiveErrorListener extends BaseErrorListener {
     public static DescriptiveErrorListener INSTANCE = new DescriptiveErrorListener();
 
@@ -11,10 +14,14 @@ public class DescriptiveErrorListener extends BaseErrorListener {
                             String msg, RecognitionException e)
     {
         String sourceName = recognizer.getInputStream().getSourceName();
+        
+        if (sourceName == null) sourceName = "";
+        
         if (!sourceName.isEmpty()) {
             sourceName = String.format("%s:%d:%d: ", sourceName, line, charPositionInLine);
         }
 
-        System.out.println(sourceName+"line "+line+":"+charPositionInLine+" "+msg);
+        Logs.addError("[Syntax] " + sourceName + "line " + line + ":" + charPositionInLine + " " + msg);
     }
+
 }

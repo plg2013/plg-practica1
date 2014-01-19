@@ -18,8 +18,6 @@ fragment PUNTO : '.' ;
 
 OP_CAST : PAR_AP TIPO PAR_CI ;
 
-OP_UN : (OP_NEG | OP_LOGNOT) ;
-OP_NEG : '-' ;
 OP_LOGNOT : '!' ;
 
 OP_MULTI : (OP_MULT | OP_DIV | OP_MOD | OP_LOGAND) ;
@@ -28,7 +26,6 @@ OP_DIV : '/' ;
 OP_MOD : '%' ;
 OP_LOGAND : '&&' ;
 
-OP_ADI : (OP_ADD | OP_SUB | OP_LOGOR) ;
 OP_ADD : '+' ;
 OP_SUB : '-' ;
 OP_LOGOR : '||' ;
@@ -43,7 +40,6 @@ OP_NE : '!=' ;
 
 OP_ASIG : '=' ;
 
-OP_IO : (OP_IN | OP_OUT) ;
 OP_IN : 'in' ;
 OP_OUT : 'out' ;
 
@@ -80,46 +76,47 @@ accs
     ;
 
 acc
-    : exp_nv0 SEP
+    : ioExpr SEP
     ;
 
-exp_nv0
-    : OP_IO (id | exp_nv1)
-    | exp_nv1
+ioExpr // IO expr
+    : OP_IN id
+    | OP_OUT (id | asigExpr)
+    | asigExpr
     ;
 
-exp_nv1
-    : id OP_ASIG exp_nv1
-    | exp_nv2
+asigExpr // Asigative expr
+    : id OP_ASIG asigExpr
+    | compExpr
     ;
 
-exp_nv2
-    : exp_nv3 OP_COMP exp_nv3 
-    | exp_nv3
+compExpr // Comparative expr
+    : adiExpr OP_COMP adiExpr 
+    | adiExpr
     ;
 
-exp_nv3
-    : exp_nv3 OP_ADI exp_nv4
-    | exp_nv4
+adiExpr // Aditive expr
+    : adiExpr (OP_ADD | OP_SUB | OP_LOGOR) multExpr
+    | multExpr
     ;
 
-exp_nv4
-    : exp_nv4 OP_MULTI exp_nv5
-    | exp_nv5
+multExpr // Multiplicative expr
+    : multExpr OP_MULTI unaryExpr
+    | unaryExpr
     ;
 
-exp_nv5
-    : OP_UN exp_nv5
-    | exp_nv6
+unaryExpr // Unary expr
+    : (OP_SUB | OP_LOGNOT) castExpr
+    | castExpr
     ;
 
-exp_nv6
-    : OP_CAST exp_term
-    | exp_term
+castExpr // Casting expr
+    : OP_CAST term
+    | term
     ;
 
-exp_term
-    : PAR_AP exp_nv0 PAR_CI
+term // Terminal
+    : PAR_AP ioExpr PAR_CI
     | id
     | num
     ;

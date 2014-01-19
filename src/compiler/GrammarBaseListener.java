@@ -1,4 +1,5 @@
 package compiler;
+
 // Generated from Grammar.g4 by ANTLR 4.1
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -17,39 +18,26 @@ public class GrammarBaseListener implements GrammarListener {
 	 * <p/>
 	 * The default implementation does nothing.
 	 */
-	@Override public void enterExp_nv6(@NotNull GrammarParser.Exp_nv6Context ctx) { }
+	@Override public void enterMultExpr(@NotNull GrammarParser.MultExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 * <p/>
 	 * The default implementation does nothing.
 	 */
-	@Override public void exitExp_nv6(@NotNull GrammarParser.Exp_nv6Context ctx) { }
+	@Override public void exitMultExpr(@NotNull GrammarParser.MultExprContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
 	 * <p/>
 	 * The default implementation does nothing.
 	 */
-	@Override public void enterExp_term(@NotNull GrammarParser.Exp_termContext ctx) { }
+	@Override public void enterCastExpr(@NotNull GrammarParser.CastExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 * <p/>
 	 * The default implementation does nothing.
 	 */
-	@Override public void exitExp_term(@NotNull GrammarParser.Exp_termContext ctx) { }
-
-	/**
-	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation does nothing.
-	 */
-	@Override public void enterExp_nv2(@NotNull GrammarParser.Exp_nv2Context ctx) { }
-	/**
-	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation does nothing.
-	 */
-	@Override public void exitExp_nv2(@NotNull GrammarParser.Exp_nv2Context ctx) { }
+	@Override public void exitCastExpr(@NotNull GrammarParser.CastExprContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
@@ -69,71 +57,6 @@ public class GrammarBaseListener implements GrammarListener {
 	 * <p/>
 	 * The default implementation does nothing.
 	 */
-	@Override public void enterExp_nv3(@NotNull GrammarParser.Exp_nv3Context ctx) { }
-	/**
-	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation does nothing.
-	 */
-	@Override public void exitExp_nv3(@NotNull GrammarParser.Exp_nv3Context ctx) { }
-
-	/**
-	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation does nothing.
-	 */
-	@Override public void enterExp_nv4(@NotNull GrammarParser.Exp_nv4Context ctx) { }
-	/**
-	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation does nothing.
-	 */
-	@Override public void exitExp_nv4(@NotNull GrammarParser.Exp_nv4Context ctx) { }
-
-	/**
-	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation does nothing.
-	 */
-	@Override public void enterExp_nv5(@NotNull GrammarParser.Exp_nv5Context ctx) { }
-	/**
-	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation does nothing.
-	 */
-	@Override public void exitExp_nv5(@NotNull GrammarParser.Exp_nv5Context ctx) { }
-
-	/**
-	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation does nothing.
-	 */
-	@Override public void enterExp_nv0(@NotNull GrammarParser.Exp_nv0Context ctx) { }
-	/**
-	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation does nothing.
-	 */
-	@Override public void exitExp_nv0(@NotNull GrammarParser.Exp_nv0Context ctx) { }
-
-	/**
-	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation does nothing.
-	 */
-	@Override public void enterExp_nv1(@NotNull GrammarParser.Exp_nv1Context ctx) { }
-	/**
-	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation does nothing.
-	 */
-	@Override public void exitExp_nv1(@NotNull GrammarParser.Exp_nv1Context ctx) { }
-
-	/**
-	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation does nothing.
-	 */
 	@Override public void enterAcc(@NotNull GrammarParser.AccContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -141,6 +64,19 @@ public class GrammarBaseListener implements GrammarListener {
 	 * The default implementation does nothing.
 	 */
 	@Override public void exitAcc(@NotNull GrammarParser.AccContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void enterCompExpr(@NotNull GrammarParser.CompExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void exitCompExpr(@NotNull GrammarParser.CompExprContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
@@ -212,6 +148,45 @@ public class GrammarBaseListener implements GrammarListener {
 	 * <p/>
 	 * The default implementation does nothing.
 	 */
+	@Override public void enterIoExpr(@NotNull GrammarParser.IoExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void exitIoExpr(@NotNull GrammarParser.IoExprContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void enterTerm(@NotNull GrammarParser.TermContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void exitTerm(@NotNull GrammarParser.TermContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void enterUnaryExpr(@NotNull GrammarParser.UnaryExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void exitUnaryExpr(@NotNull GrammarParser.UnaryExprContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
 	@Override public void enterTipo(@NotNull GrammarParser.TipoContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -219,6 +194,32 @@ public class GrammarBaseListener implements GrammarListener {
 	 * The default implementation does nothing.
 	 */
 	@Override public void exitTipo(@NotNull GrammarParser.TipoContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void enterAsigExpr(@NotNull GrammarParser.AsigExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void exitAsigExpr(@NotNull GrammarParser.AsigExprContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void enterAdiExpr(@NotNull GrammarParser.AdiExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void exitAdiExpr(@NotNull GrammarParser.AdiExprContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

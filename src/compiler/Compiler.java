@@ -66,16 +66,18 @@ public class Compiler extends GrammarBaseListener {
 		}
 	}
 
-	public void exitExp_nv0(GrammarParser.Exp_nv0Context ctx) {
+	public void exitIoExpr(GrammarParser.IoExprContext ctx) {
 
-		//	exp_nv0
-		//      : OP_IO (id | exp_nv1)
-		//      | exp_nv1
-		//      ;
+		//	ioExpr
+		//	    : OP_IN id
+		//	    | OP_OUT (id | asigExpr)
+		//	    | asigExpr
+		//	    ;
 
-		if (ctx.OP_IO() != null) { // Ensure it is IO expression
+		if (ctx.OP_IN() != null || ctx.OP_OUT() != null) { // Ensure it is IO expression
 
-			String op_io = ctx.OP_IO().getText();
+			String op_io = ctx.OP_IN() != null ?
+					ctx.OP_IN().getText() : ctx.OP_OUT().getText();
 
 			if (ctx.id() != null) { // IO with a variable
 
@@ -112,8 +114,8 @@ public class Compiler extends GrammarBaseListener {
 					break;
 
 				case "out":
-					if (ctx.exp_nv1() != null && ctx.exp_nv1().OP_ASIG() != null) {	
-						String id = ctx.exp_nv1().id().getText();
+					if (ctx.asigExpr() != null && ctx.asigExpr().OP_ASIG() != null) {	
+						String id = ctx.asigExpr().id().getText();
 						addCode("apila-dir( " + TS.get(id).get("mem_addr") + " )");
 					}
 					
@@ -130,11 +132,11 @@ public class Compiler extends GrammarBaseListener {
 	}
 
 
-	public void exitExp_nv1(GrammarParser.Exp_nv1Context ctx) {
+	public void exitAsigExpr(GrammarParser.AsigExprContext ctx) {
 
-		//  exp_nv1
-		//	    : id OP_ASIG exp_nv1
-		//	    | exp_nv2
+		//	asigExpr // Asigative expr
+		//	    : id OP_ASIG asigExpr
+		//	    | compExpr
 		//	    ;
 
 		if (ctx.OP_ASIG() != null) {
@@ -153,11 +155,11 @@ public class Compiler extends GrammarBaseListener {
 		}	
 	}
 
-	public void exitExp_nv2(GrammarParser.Exp_nv2Context ctx) {
+	public void exitCompExpr(GrammarParser.CompExprContext ctx) {
 
-		//	exp_nv2
-		//	    : exp_nv3 OP_COMP exp_nv3 
-		//	    | exp_nv3
+		//	compExpr
+		//	    : adiExpr OP_COMP adiExpr 
+		//	    | adiExpr
 		//	    ;
 
 		if (ctx.OP_COMP() != null) {
@@ -196,16 +198,22 @@ public class Compiler extends GrammarBaseListener {
 		}
 	}
 
-	public void exitExp_nv3(GrammarParser.Exp_nv3Context ctx) {
+	public void exitAdiExpr(GrammarParser.AdiExprContext ctx) {
 
-		//	exp_nv3
-		//	    : exp_nv3 OP_ADI exp_nv4
-		//	    | exp_nv4
+		//	adiExpr
+		//	    : adiExpr (OP_ADD | OP_SUB | OP_LOGOR) multExpr
+		//	    | multExpr
 		//	    ;
 
-		if (ctx.OP_ADI() != null) {
+		if (ctx.OP_ADD() != null || ctx.OP_SUB() != null || ctx.OP_LOGOR() != null) {
 			
-			String op_adi = ctx.OP_ADI().getText();
+			String op_adi;
+			
+			if (ctx.OP_ADD() != null)
+				op_adi = ctx.OP_ADD().getText();
+			else
+				op_adi = ctx.OP_SUB() != null ?
+						ctx.OP_SUB().getText() : ctx.OP_LOGOR().getText();
 			
 			switch(op_adi) {
 			case "+":
@@ -227,11 +235,11 @@ public class Compiler extends GrammarBaseListener {
 		}
 	}
 	
-	public void exitExp_nv4(GrammarParser.Exp_nv4Context ctx) {
+	public void exitMultExpr(GrammarParser.MultExprContext ctx) {
 		
-		//	exp_nv4
-		//	    : exp_nv4 OP_MULTI exp_nv5
-		//	    | exp_nv5
+		//	multExpr
+		//	    : multExpr OP_MULTI unaryExpr
+		//	    | unaryExpr
 		//	    ;
 
 		if (ctx.OP_MULTI() != null) {
@@ -262,17 +270,17 @@ public class Compiler extends GrammarBaseListener {
 		}
 	}
 	
-	public void exitExp_nv5(GrammarParser.Exp_nv5Context ctx) {
+	public void exitUnaryExpr(GrammarParser.UnaryExprContext ctx) {
 		
-		//	exp_nv5
-		//	    : OP_UN exp_nv5
-		//	    | exp_nv6
+		//	unaryExpr
+		//	    : (OP_SUB | OP_LOGNOT) castExpr
+		//	    | castExpr
 		//	    ;
-
 		
-		if (ctx.OP_UN() != null) {
+		if (ctx.OP_SUB() != null || ctx.OP_LOGNOT() != null) {
 		
-			String op_un = ctx.OP_UN().getText();
+			String op_un = ctx.OP_SUB() != null ?
+					ctx.OP_SUB().getText() : ctx.OP_LOGNOT().getText();
 			
 			switch(op_un) {
 			case "-":
@@ -291,11 +299,11 @@ public class Compiler extends GrammarBaseListener {
 		}
 	}
 	
-	public void exitExp_nv6(GrammarParser.Exp_nv6Context ctx) {
+	public void exitCastExpr(GrammarParser.CastExprContext ctx) {
 		
-		//	exp_nv6
-		//	    : OP_CAST exp_term
-		//	    | exp_term
+		//	castExpr
+		//	    : OP_CAST term
+		//	    | term
 		//	    ;
 
 		if (ctx.OP_CAST() != null) {
@@ -318,10 +326,10 @@ public class Compiler extends GrammarBaseListener {
 		}
 	}
 	
-	public void exitExp_term(GrammarParser.Exp_termContext ctx) {
+	public void exitTerm(GrammarParser.TermContext ctx) {
 		
-		//	exp_term
-		//	    : PAR_AP exp_nv0 PAR_CI
+		//	term
+		//	    : PAR_AP ioExpr PAR_CI
 		//	    | id
 		//	    | num
 		//	    ;

@@ -8,37 +8,26 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  */
 public interface GrammarListener extends ParseTreeListener {
 	/**
-	 * Enter a parse tree produced by {@link GrammarParser#exp_nv6}.
+	 * Enter a parse tree produced by {@link GrammarParser#multExpr}.
 	 * @param ctx the parse tree
 	 */
-	void enterExp_nv6(@NotNull GrammarParser.Exp_nv6Context ctx);
+	void enterMultExpr(@NotNull GrammarParser.MultExprContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link GrammarParser#exp_nv6}.
+	 * Exit a parse tree produced by {@link GrammarParser#multExpr}.
 	 * @param ctx the parse tree
 	 */
-	void exitExp_nv6(@NotNull GrammarParser.Exp_nv6Context ctx);
+	void exitMultExpr(@NotNull GrammarParser.MultExprContext ctx);
 
 	/**
-	 * Enter a parse tree produced by {@link GrammarParser#exp_term}.
+	 * Enter a parse tree produced by {@link GrammarParser#castExpr}.
 	 * @param ctx the parse tree
 	 */
-	void enterExp_term(@NotNull GrammarParser.Exp_termContext ctx);
+	void enterCastExpr(@NotNull GrammarParser.CastExprContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link GrammarParser#exp_term}.
+	 * Exit a parse tree produced by {@link GrammarParser#castExpr}.
 	 * @param ctx the parse tree
 	 */
-	void exitExp_term(@NotNull GrammarParser.Exp_termContext ctx);
-
-	/**
-	 * Enter a parse tree produced by {@link GrammarParser#exp_nv2}.
-	 * @param ctx the parse tree
-	 */
-	void enterExp_nv2(@NotNull GrammarParser.Exp_nv2Context ctx);
-	/**
-	 * Exit a parse tree produced by {@link GrammarParser#exp_nv2}.
-	 * @param ctx the parse tree
-	 */
-	void exitExp_nv2(@NotNull GrammarParser.Exp_nv2Context ctx);
+	void exitCastExpr(@NotNull GrammarParser.CastExprContext ctx);
 
 	/**
 	 * Enter a parse tree produced by {@link GrammarParser#decs}.
@@ -52,61 +41,6 @@ public interface GrammarListener extends ParseTreeListener {
 	void exitDecs(@NotNull GrammarParser.DecsContext ctx);
 
 	/**
-	 * Enter a parse tree produced by {@link GrammarParser#exp_nv3}.
-	 * @param ctx the parse tree
-	 */
-	void enterExp_nv3(@NotNull GrammarParser.Exp_nv3Context ctx);
-	/**
-	 * Exit a parse tree produced by {@link GrammarParser#exp_nv3}.
-	 * @param ctx the parse tree
-	 */
-	void exitExp_nv3(@NotNull GrammarParser.Exp_nv3Context ctx);
-
-	/**
-	 * Enter a parse tree produced by {@link GrammarParser#exp_nv4}.
-	 * @param ctx the parse tree
-	 */
-	void enterExp_nv4(@NotNull GrammarParser.Exp_nv4Context ctx);
-	/**
-	 * Exit a parse tree produced by {@link GrammarParser#exp_nv4}.
-	 * @param ctx the parse tree
-	 */
-	void exitExp_nv4(@NotNull GrammarParser.Exp_nv4Context ctx);
-
-	/**
-	 * Enter a parse tree produced by {@link GrammarParser#exp_nv5}.
-	 * @param ctx the parse tree
-	 */
-	void enterExp_nv5(@NotNull GrammarParser.Exp_nv5Context ctx);
-	/**
-	 * Exit a parse tree produced by {@link GrammarParser#exp_nv5}.
-	 * @param ctx the parse tree
-	 */
-	void exitExp_nv5(@NotNull GrammarParser.Exp_nv5Context ctx);
-
-	/**
-	 * Enter a parse tree produced by {@link GrammarParser#exp_nv0}.
-	 * @param ctx the parse tree
-	 */
-	void enterExp_nv0(@NotNull GrammarParser.Exp_nv0Context ctx);
-	/**
-	 * Exit a parse tree produced by {@link GrammarParser#exp_nv0}.
-	 * @param ctx the parse tree
-	 */
-	void exitExp_nv0(@NotNull GrammarParser.Exp_nv0Context ctx);
-
-	/**
-	 * Enter a parse tree produced by {@link GrammarParser#exp_nv1}.
-	 * @param ctx the parse tree
-	 */
-	void enterExp_nv1(@NotNull GrammarParser.Exp_nv1Context ctx);
-	/**
-	 * Exit a parse tree produced by {@link GrammarParser#exp_nv1}.
-	 * @param ctx the parse tree
-	 */
-	void exitExp_nv1(@NotNull GrammarParser.Exp_nv1Context ctx);
-
-	/**
 	 * Enter a parse tree produced by {@link GrammarParser#acc}.
 	 * @param ctx the parse tree
 	 */
@@ -116,6 +50,17 @@ public interface GrammarListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitAcc(@NotNull GrammarParser.AccContext ctx);
+
+	/**
+	 * Enter a parse tree produced by {@link GrammarParser#compExpr}.
+	 * @param ctx the parse tree
+	 */
+	void enterCompExpr(@NotNull GrammarParser.CompExprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link GrammarParser#compExpr}.
+	 * @param ctx the parse tree
+	 */
+	void exitCompExpr(@NotNull GrammarParser.CompExprContext ctx);
 
 	/**
 	 * Enter a parse tree produced by {@link GrammarParser#id}.
@@ -173,6 +118,39 @@ public interface GrammarListener extends ParseTreeListener {
 	void exitDec(@NotNull GrammarParser.DecContext ctx);
 
 	/**
+	 * Enter a parse tree produced by {@link GrammarParser#ioExpr}.
+	 * @param ctx the parse tree
+	 */
+	void enterIoExpr(@NotNull GrammarParser.IoExprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link GrammarParser#ioExpr}.
+	 * @param ctx the parse tree
+	 */
+	void exitIoExpr(@NotNull GrammarParser.IoExprContext ctx);
+
+	/**
+	 * Enter a parse tree produced by {@link GrammarParser#term}.
+	 * @param ctx the parse tree
+	 */
+	void enterTerm(@NotNull GrammarParser.TermContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link GrammarParser#term}.
+	 * @param ctx the parse tree
+	 */
+	void exitTerm(@NotNull GrammarParser.TermContext ctx);
+
+	/**
+	 * Enter a parse tree produced by {@link GrammarParser#unaryExpr}.
+	 * @param ctx the parse tree
+	 */
+	void enterUnaryExpr(@NotNull GrammarParser.UnaryExprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link GrammarParser#unaryExpr}.
+	 * @param ctx the parse tree
+	 */
+	void exitUnaryExpr(@NotNull GrammarParser.UnaryExprContext ctx);
+
+	/**
 	 * Enter a parse tree produced by {@link GrammarParser#tipo}.
 	 * @param ctx the parse tree
 	 */
@@ -182,4 +160,26 @@ public interface GrammarListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitTipo(@NotNull GrammarParser.TipoContext ctx);
+
+	/**
+	 * Enter a parse tree produced by {@link GrammarParser#asigExpr}.
+	 * @param ctx the parse tree
+	 */
+	void enterAsigExpr(@NotNull GrammarParser.AsigExprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link GrammarParser#asigExpr}.
+	 * @param ctx the parse tree
+	 */
+	void exitAsigExpr(@NotNull GrammarParser.AsigExprContext ctx);
+
+	/**
+	 * Enter a parse tree produced by {@link GrammarParser#adiExpr}.
+	 * @param ctx the parse tree
+	 */
+	void enterAdiExpr(@NotNull GrammarParser.AdiExprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link GrammarParser#adiExpr}.
+	 * @param ctx the parse tree
+	 */
+	void exitAdiExpr(@NotNull GrammarParser.AdiExprContext ctx);
 }

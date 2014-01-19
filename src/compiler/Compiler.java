@@ -63,8 +63,8 @@ public class Compiler extends GrammarBaseListener {
 			addError("[E] Declaración de variable incorrecta.");
 
 		else {	
-			String type = ctx.tipo().getText();
-			String id = ctx.id().getText();
+			String type = ctx.tipo().getText().toLowerCase();
+			String id = ctx.id().getText().toLowerCase();
 
 			if (TS.containsKey(id)) {
 				addError("[W] La variable '" + id + "' ya se ha declarado previamente");
@@ -98,7 +98,7 @@ public class Compiler extends GrammarBaseListener {
 
 			if (ctx.id() != null) { // IO with a variable
 
-				String id = ctx.id().getText();
+				String id = ctx.id().getText().toLowerCase();
 
 				if (!TS.containsKey(id)) {
 					addError("[E] Variable '" + id + "' no declarada.");
@@ -166,7 +166,7 @@ public class Compiler extends GrammarBaseListener {
 
 		if (ctx.OP_ASIG() != null) {
 
-			String id = ctx.id().getText();
+			String id = ctx.id().getText().toLowerCase();
 
 			if (!TS.containsKey(id)) {
 				addError("[E] Variable '" + id + "' no declarada.");
@@ -410,7 +410,7 @@ public class Compiler extends GrammarBaseListener {
 
 		if (ctx.OP_CAST() != null) {
 			
-			String op_cast = ctx.OP_CAST().getText();
+			String op_cast = ctx.OP_CAST().getText().toLowerCase();
 			
 			switch(op_cast) {
 			case "(int)":
@@ -444,7 +444,7 @@ public class Compiler extends GrammarBaseListener {
 
 		if (ctx.id() != null) {
 
-			String id = ctx.id().getText();
+			String id = ctx.id().getText().toLowerCase();
 			
 			if (!TS.containsKey(id)) {
 				addError("[E] Variable '" + id + "' no declarada.");

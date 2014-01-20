@@ -1,0 +1,5 @@
+@ Programa con variable real mal inicializada (ceros a la derecha)
+
+real cantidad;
+
+cantidad = 1.3000;

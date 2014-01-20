@@ -1,0 +1,8 @@
+@ Programa de prueba con un error en la sintaxis
+real cantidadTotal; 
+int euros; 
+real centimos; 
+
+out euros = in euros);
+out centimos = (in centimos);
+out cantidadTotal = euros + centimos;

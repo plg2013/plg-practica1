@@ -1,0 +1,8 @@
+@ Programa basado en el ejemplo 1, pero que no tiene la variable
+@ centimos declarada
+real cantidadTotal; 
+int euros; 
+
+out euros = (in euros);
+out centimos = (in centimos);
+out cantidadTotal = euros + centimos;

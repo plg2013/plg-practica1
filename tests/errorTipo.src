@@ -1,0 +1,10 @@
+int i;
+real r;
+
+i = 1.2;
+i = (int) 1.2;
+
+r = 1;
+
+out i;
+out r;

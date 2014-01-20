@@ -1,0 +1,10 @@
+real x;
+real y;
+real z;
+real solution;
+
+in x;
+in y;
+in z;
+
+solution = -1.23 * (x + (real) 245) / (1 && 1.02) - z; 

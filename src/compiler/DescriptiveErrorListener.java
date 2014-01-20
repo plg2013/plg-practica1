@@ -13,6 +13,7 @@ public class DescriptiveErrorListener extends BaseErrorListener {
                             int line, int charPositionInLine,
                             String msg, RecognitionException e)
     {
+        // Nombre del stream de origen en el que se ha producido el error
         String sourceName = recognizer.getInputStream().getSourceName();
         
         if (sourceName == null) sourceName = "";
@@ -21,6 +22,7 @@ public class DescriptiveErrorListener extends BaseErrorListener {
             sourceName = String.format("%s:%d:%d: ", sourceName, line, charPositionInLine);
         }
 
+        // Envia el mesaje de error al log
         Logs.addError("[Syntax] " + sourceName + "Linea " + line + ": " + msg);
     }
 

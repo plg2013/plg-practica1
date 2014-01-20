@@ -23,24 +23,25 @@ public class CmdLineInterface {
 	
 	public void exec(ANTLRInputStream input) {
 
+		// Lexer
 		GrammarLexer lexer = new GrammarLexer(input);
 		lexer.removeErrorListeners();
 		lexer.addErrorListener(DescriptiveErrorListener.INSTANCE);
 
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 
+		// Parser
 		GrammarParser parser = new GrammarParser(tokens);
 		parser.removeErrorListeners();
 		parser.addErrorListener(DescriptiveErrorListener.INSTANCE);
 
-		ParseTree tree = parser.programa(); // begin parsing at rule 'programa'
+		// Empieza a parsear en la regla 'programa'
+		ParseTree tree = parser.programa();
 
-		// create a standard ANTLR parse tree walker
+		// Recorre el arbol creado por el parser
 		ParseTreeWalker walker = new ParseTreeWalker();
-		// create listener then feed to walker
-		
 		compiler = new Compiler();
-		walker.walk(compiler, tree);   // walk parse tree
+		walker.walk(compiler, tree);
 
 	}
 
@@ -63,8 +64,9 @@ public class CmdLineInterface {
 			e.printStackTrace();
 		}
 		
+		// Ejecuta el programa sobre el archivo test.src y escribe el código generado
 		cli.exec(input);
-		System.out.println(cli.compiler.getTS());
+		System.out.println(cli.compiler.getCode());
 		
 	}
 };

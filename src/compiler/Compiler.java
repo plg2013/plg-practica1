@@ -8,15 +8,14 @@ import utils.Logs;
 
 public class Compiler extends GrammarBaseListener {
 
-	// Hash table to store the information for the variables
+	// Tabla de simbolos
 	Map<String, Map<String, String>> TS = 
 			new OrderedHashMap<String, Map<String, String>>();
 
-	// Memory counter to assign address to the variables
+	// Contador para asignar la direccion de memoria a las variables
 	int heap_memory_addr = 0x0;
 
-	// Compiler output
-	String errors = "";
+	// Codigo P final
 	String code = "";
 
 
@@ -24,13 +23,11 @@ public class Compiler extends GrammarBaseListener {
 		// Empty constructor
 	}
 
-	public String getErrors() {
-		return errors;
-	}
 	public String getCode() {
 		return code;
 	}
 	
+	// Formatea la Tabla de Simbolos para mostrarla en la interfaz
 	public String getTS() {
 		
 		String ts_out = "";
@@ -47,19 +44,18 @@ public class Compiler extends GrammarBaseListener {
 		return ts_out;
 	}
 
-	public void addError(String new_error) {
-		errors += new_error + "\n";
-	}
-
+	// Añade una nueva instruccion al codigo P generado
 	private void addCode(String new_code) {
 		code += new_code + "\n";
 	}
 
 
+	// Ejecutado al salir de la produccion 'dec'
 	public void exitDec(GrammarParser.DecContext ctx) {
 
 		// dec : tipo id ;
 
+		// Error por tipo o id mal declarados
 		if (ctx.id() == null || ctx.tipo() == null) 
 			Logs.addError("[Error] Declaración de variable incorrecta.");
 
@@ -67,10 +63,13 @@ public class Compiler extends GrammarBaseListener {
 			String type = ctx.tipo().getText().toLowerCase();
 			String id = ctx.id().getText().toLowerCase();
 
+			// Warning porque la variable ya estaba declarada
 			if (TS.containsKey(id)) {
 				Logs.addError("[Warning] La variable '" + id + "' ya se ha declarado previamente");
 
 			} else {
+
+				// Almacena la variable en la Tabla de Simbolos
 				Map<String, String> var_attributes =
 						new OrderedHashMap<String, String>();
 
@@ -92,15 +91,17 @@ public class Compiler extends GrammarBaseListener {
 		//	    | asigExpr
 		//	    ;
 
-		if (ctx.OP_IN() != null || ctx.OP_OUT() != null) { // Ensure it is IO expression
+		// Expresion de E/S
+		if (ctx.OP_IN() != null || ctx.OP_OUT() != null) {
 
 			String op_io = ctx.OP_IN() != null ?
 					ctx.OP_IN().getText() : ctx.OP_OUT().getText();
 
-			if (ctx.id() != null) { // IO with a variable
+			if (ctx.id() != null) { // E/S con una variable
 
 				String id = ctx.id().getText().toLowerCase();
 
+				// Error por variable no declarada
 				if (!TS.containsKey(id)) {
 					Logs.addError("[Error] Variable '" + id + "' no declarada.");
 					addCode("[Código incompleto por error]");
@@ -108,6 +109,8 @@ public class Compiler extends GrammarBaseListener {
 				}
 
 				else {
+
+					// Genera el código en funcion del operador
 					switch(op_io) {
 					case "in":
 						addCode("in");
@@ -120,17 +123,20 @@ public class Compiler extends GrammarBaseListener {
 						break;
 
 					default:
+						// Esto no debería ocurrir nunca
 						Logs.addError("[Error] Operador de E/S no válido.");
 						addCode("[Código incompleto por error]");
 					}
 				
+					// Valor de retorno, para controlar las restricciones
 					ctx.basic_type = TS.get(id).get("type");
 				
 				}
 				
-			} else {
+			} else { // Operacion 'out' con una expresion
 
 
+				// Genera el código en funcion del operador
 				switch(op_io) {
 				case "out":
 					if (ctx.asigExpr() != null && ctx.asigExpr().OP_ASIG() != null) {	
@@ -145,6 +151,7 @@ public class Compiler extends GrammarBaseListener {
 					break;
 
 				default:
+					// Esto no debería ocurrir nunca
 					Logs.addError("[Error] Operador de E/S no válido.");
 					addCode("[Código incompleto por error]");
 					ctx.basic_type = "error";
@@ -153,6 +160,7 @@ public class Compiler extends GrammarBaseListener {
 		
 		} else
 		
+		// Valor de retorno sintetizado del hijo
 		ctx.basic_type = ctx.asigExpr().basic_type;
 		
 	}
@@ -165,10 +173,12 @@ public class Compiler extends GrammarBaseListener {
 		//	    | compExpr
 		//	    ;
 
+		// Expresion de asignacion
 		if (ctx.OP_ASIG() != null) {
 
 			String id = ctx.id().getText().toLowerCase();
 
+			// Error por variable no declarada
 			if (!TS.containsKey(id)) {
 				Logs.addError("[Error] Variable '" + id + "' no declarada.");
 				addCode("[Código incompleto por error]");
@@ -176,10 +186,13 @@ public class Compiler extends GrammarBaseListener {
 
 			} else {
 
+				// Genera el código P
 				addCode("desapila-dir( " + TS.get(id).get("mem_addr") + " )");
 				
+				// Valor de retorno, para controlar las restricciones
 				ctx.basic_type = TS.get(id).get("type");
 				
+				// Restricciones de tipo
 				if (ctx.basic_type.equals("int") && ctx.asigExpr().basic_type.equals("real") )
 					Logs.addError("[Warning] Se está asignando un tipo 'real' a una variable de tipo 'int'.");
 
@@ -187,6 +200,7 @@ public class Compiler extends GrammarBaseListener {
 			
 		} else
 			
+			// Valor de retorno sintetizado del hijo
 			ctx.basic_type = ctx.compExpr().basic_type;
 	}
 
@@ -197,12 +211,15 @@ public class Compiler extends GrammarBaseListener {
 		//	    | adiExpr
 		//	    ;
 
+		// Expresion de comparacion
 		if (ctx.OP_COMP() != null) {
 
 			String op_comp = ctx.OP_COMP().getText();
 			
+			// Valor de retorno, para controlar las restricciones
 			ctx.basic_type = "int";
 
+			// Generacion del código P en funcion del operador
 			switch(op_comp) {
 			case "<":
 				addCode("menor");
@@ -229,6 +246,7 @@ public class Compiler extends GrammarBaseListener {
 				break;
 
 			default:
+				// Esto no debería ocurrir nunca
 				Logs.addError("[Error] Operador de comparación no válido");
 				addCode("[Código incompleto por error]");
 				ctx.basic_type = "error";
@@ -236,7 +254,7 @@ public class Compiler extends GrammarBaseListener {
 		
 		} else
 			
-			// 'adiExpr(0)' required because both sides of the first alternative are adiExpr
+			// Valor de retorno sintetizado del hijo
 			ctx.basic_type = ctx.adiExpr(0).basic_type;
 		
 	}
@@ -248,20 +266,24 @@ public class Compiler extends GrammarBaseListener {
 		//	    | multExpr
 		//	    ;
 
+		// Expresion aditiva
 		if (ctx.OP_ADD() != null || ctx.OP_SUB() != null || ctx.OP_LOGOR() != null) {
 			
 			String op_adi;
 			
+			// Almacena el operador utilizado
 			if (ctx.OP_ADD() != null)
 				op_adi = ctx.OP_ADD().getText();
 			else
 				op_adi = ctx.OP_SUB() != null ?
 						ctx.OP_SUB().getText() : ctx.OP_LOGOR().getText();
 			
+			// Genera el código P en funcion del operador
 			switch(op_adi) {
 			case "+":
 				addCode("suma");
 
+				// Valor de retorno
 				if (ctx.left.basic_type.equals("real") || ctx.right.basic_type.equals("real"))
 					ctx.basic_type = "real";
 				else
@@ -272,6 +294,7 @@ public class Compiler extends GrammarBaseListener {
 			case "-":
 				addCode("resta");
 
+				// Valor de retorno
 				if (ctx.left.basic_type.equals("real") || ctx.right.basic_type.equals("real"))
 					ctx.basic_type = "real";
 				else
@@ -282,14 +305,17 @@ public class Compiler extends GrammarBaseListener {
 			case "||":
 				addCode("or");
 
+				// Restriccion de tipo
 				if (!ctx.left.basic_type.equals("int") || !ctx.right.basic_type.equals("int"))
 					Logs.addError("[Warning] Los operandos de la unión deben ser de tipo 'int'");
 				
+				// Valor de retorno
 				ctx.basic_type = "int";
 				
 				break;
 			
 			default:
+				// Esto no deberia pasar nunca
 				Logs.addError("[Error] Operador aditivo no válido");
 				addCode("[Código incompleto por error]");
 				ctx.basic_type = "error";
@@ -297,6 +323,7 @@ public class Compiler extends GrammarBaseListener {
 		
 		} else
 			
+			// Valor de retorno sintetizado del hijo
 			ctx.basic_type = ctx.multExpr().basic_type;
 	}
 	
@@ -307,14 +334,17 @@ public class Compiler extends GrammarBaseListener {
 		//	    | unaryExpr
 		//	    ;
 
+		// Expresion multiplicativa
 		if (ctx.OP_MULTI() != null) {
 			
 			String op_multi = ctx.OP_MULTI().getText();
 			
+			// Generacion de codigo P en funcion del operador
 			switch(op_multi) {
 			case "*":
 				addCode("multiplica");
 				
+				// Valor de retorno
 				if (ctx.left.basic_type.equals("real") || ctx.right.basic_type.equals("real"))
 					ctx.basic_type = "real";
 				else
@@ -325,6 +355,7 @@ public class Compiler extends GrammarBaseListener {
 			case "/":
 				addCode("divide");
 				
+				// Valor de retorno
 				if (ctx.left.basic_type.equals("real") || ctx.right.basic_type.equals("real"))
 					ctx.basic_type = "real";
 				else
@@ -335,9 +366,11 @@ public class Compiler extends GrammarBaseListener {
 			case "%":
 				addCode("modulo");
 				
+				// Restriccion de tipo
 				if (!ctx.left.basic_type.equals("int") || !ctx.right.basic_type.equals("int"))
 					Logs.addError("[Warning] Los operandos del operador módulo deben ser de tipo 'int'");
 				
+				// Valor de retorno
 				ctx.basic_type = "int";
 				
 				break;
@@ -345,14 +378,17 @@ public class Compiler extends GrammarBaseListener {
 			case "&&":
 				addCode("and");
 				
+				// Restriccion de tipo
 				if (!ctx.left.basic_type.equals("int") || !ctx.right.basic_type.equals("int"))
 					Logs.addError("[Warning] Los operandos de la intersección deben ser de tipo 'int'");
 				
+				// Valor de retorno
 				ctx.basic_type = "int";
 				
 				break;
 			
 			default:
+				// Esto no deberia pasar nunca
 				Logs.addError("[Error] Operador multiplicativo no válido");
 				addCode("[Código incompleto por error]");
 				ctx.basic_type = "error";
@@ -360,6 +396,7 @@ public class Compiler extends GrammarBaseListener {
 		
 		} else
 			
+			// Valor de retorno sintetizado del hijo
 			ctx.basic_type = ctx.unaryExpr().basic_type;
 	}
 	
@@ -370,28 +407,36 @@ public class Compiler extends GrammarBaseListener {
 		//	    | castExpr
 		//	    ;
 		
+		// Expresion unaria
 		if (ctx.OP_SUB() != null || ctx.OP_LOGNOT() != null) {
 		
+			//Almacena el operador utilizado
 			String op_un = ctx.OP_SUB() != null ?
 					ctx.OP_SUB().getText() : ctx.OP_LOGNOT().getText();
 			
+			// Genera el codigo en funcion del operador
 			switch(op_un) {
 			case "-":
 				addCode("negativo");
+
+				// Valor de retorno
 				ctx.basic_type = ctx.castExpr().basic_type;
 				break;
 				
 			case "!":
 				addCode("not");
 				
+				// Restriccion de tipo
 				if (!ctx.castExpr().basic_type.equals("int"))
 					Logs.addError("[Warning] El operando de la negación lógica debe ser de tipo 'int'");
 				
+				// Valor de retorno
 				ctx.basic_type = "int";
 				
 				break;
 			
 			default:
+				// Esto no deberia pasar nunca
 				Logs.addError("Operador unario no válido");
 				addCode("[Código incompleto por error]");
 				ctx.basic_type = "error";
@@ -399,6 +444,7 @@ public class Compiler extends GrammarBaseListener {
 			
 		} else
 			
+			// Valor de retorno sintetizado del hijo
 			ctx.basic_type = ctx.castExpr().basic_type;
 	}
 	
@@ -409,22 +455,29 @@ public class Compiler extends GrammarBaseListener {
 		//	    | term
 		//	    ;
 
+		// Expresion de casting
 		if (ctx.OP_CAST() != null) {
 			
 			String op_cast = ctx.OP_CAST().getText().toLowerCase();
 			
+			// Generacion de codigo P en funcion del operador
 			switch(op_cast) {
 			case "(int)":
 				addCode("tipo( int )");
+
+				// Valor de retorno
 				ctx.basic_type = "int";
 				break;
 				
 			case "(real)":
 				addCode("tipo( real )");
+
+				// Valor de retorno
 				ctx.basic_type = "real";
 				break;
 			
 			default:
+				// Esto no deberia pasar nunca
 				Logs.addError("Operador de tipo no válido");
 				addCode("[Código incompleto por error]");
 				ctx.basic_type = "error";
@@ -432,6 +485,7 @@ public class Compiler extends GrammarBaseListener {
 		
 		} else
 			
+			// Valor de retorno sintetizado del hijo
 			ctx.basic_type = ctx.term().basic_type;
 	}
 	
@@ -443,29 +497,38 @@ public class Compiler extends GrammarBaseListener {
 		//	    | num
 		//	    ;
 
+		// Variable
 		if (ctx.id() != null) {
 
 			String id = ctx.id().getText().toLowerCase();
 			
+			// Error por variable no declarada
 			if (!TS.containsKey(id)) {
 				Logs.addError("[Error] Variable '" + id + "' no declarada.");
 				addCode("[Código incompleto por error]");
 
 			} else
+				// Generacion de codigo P
 				addCode("apila-dir( " + TS.get(id).get("mem_addr") + " )");
 			
+			// Valor de retorno
 			ctx.basic_type = TS.get(id).get("type");
 			
+
+		// Numero
 		} else if (ctx.num() != null) {
 		
 			String num = ctx.num().getText();
 			
+			// Generacion de código
 			addCode("apila( " + num + " )");
 			
+			// Valor de retorno
 			ctx.basic_type = ctx.num().basic_type;
 			
 		} else
 			
+			// Valor de retorno sintetizado del hijo
 			ctx.basic_type = ctx.ioExpr().basic_type;
 	}
 }

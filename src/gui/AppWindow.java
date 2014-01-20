@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -63,6 +64,11 @@ public class AppWindow implements ActionListener {
 		frmPlgEntrega.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmPlgEntrega.getContentPane().setLayout(null);
 
+		btnCargar = new JButton("Cargar");
+		btnCargar.addActionListener(this);
+		btnCargar.setBounds(16, 300, 99, 29);
+		frmPlgEntrega.getContentPane().add(btnCargar);
+		
 		btnCompilar = new JButton("Compilar");
 		btnCompilar.addActionListener(this);
 		btnCompilar.setBounds(62, 341, 117, 29);
@@ -150,7 +156,9 @@ public class AppWindow implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnCargar) {
 			
-			// Cargar button onclick listener code
+			
+			
+			
 			
 		} else if (e.getSource() == btnExportar) {
 			
@@ -158,23 +166,22 @@ public class AppWindow implements ActionListener {
 			
 		} else if (e.getSource() == btnCompilar) {
 			
-			// Compilar button onclick listener code
-			
+			// Crea la app de consola que actuara en segundo plano
 			CmdLineInterface cli = new CmdLineInterface();
 			
+			// Ejecuta la cli con el texto introducido por el usuario
 			ANTLRInputStream input = new ANTLRInputStream(getTextAreaCodigo().getText());
 			cli.exec(input);
 					
+			// Muestra la informacion al usuario
 			textAreaTablaSimbolos.setText("");
 			textAreaTablaSimbolos.append(cli.getCompiler().getTS());
-			
 			textAreaMaquinaPila.setText("");
 			textAreaMaquinaPila.append(cli.getCompiler().getCode());
-			
 			textAreaErrores.setText("");
 			textAreaErrores.append(Logs.getErrorsLog());
 			
-			Logs.clear(); // Ensure logs are cleared between executions
+			Logs.clear(); // Vacia los logs entre ejecuciones para evitar redundancia de info
 		}
 	}
 }

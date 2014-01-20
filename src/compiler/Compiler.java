@@ -507,13 +507,13 @@ public class Compiler extends GrammarBaseListener {
 				Logs.addError("[Error] Variable '" + id + "' no declarada.");
 				addCode("[Código incompleto por error]");
 
-			} else
+			} else {
 				// Generacion de codigo P
 				addCode("apila-dir( " + TS.get(id).get("mem_addr") + " )");
 			
-			// Valor de retorno
-			ctx.basic_type = TS.get(id).get("type");
-			
+				// Valor de retorno
+				ctx.basic_type = TS.get(id).get("type");
+			}
 
 		// Numero
 		} else if (ctx.num() != null) {

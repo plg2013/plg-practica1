@@ -8,6 +8,7 @@ import java.util.Scanner;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 
+import utils.Logs;
 import compiler.GrammarLexer;
 import compiler.GrammarParser;
 import compiler.Compiler;
@@ -42,7 +43,12 @@ public class CmdLineInterface {
 		// Recorre el arbol creado por el parser
 		ParseTreeWalker walker = new ParseTreeWalker();
 		compiler = new Compiler();
+		
+		try {
 		walker.walk(compiler, tree);
+		} catch (Exception e) {
+			Logs.addError("[FATAL ERROR] Sintaxis no válida");
+		}
 
 	}
 

@@ -3,6 +3,7 @@ package cli;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Scanner;
 
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
@@ -51,11 +52,24 @@ public class CmdLineInterface {
 		
 		CmdLineInterface cli = new CmdLineInterface();
 		
+		String filename;
+		
+		if (args.length != 0)
+			filename = args[0];
+		
+		else {
+			System.out.println("Enter a file name: ");
+			Scanner scanner = new Scanner(System.in);
+			filename = scanner.nextLine();
+			scanner.close();
+			System.out.println();
+		}
+		
 		ANTLRInputStream input = null;
 		
 		try {
 			input = new ANTLRInputStream(
-					new FileInputStream("test.src"));
+					new FileInputStream(filename));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -66,6 +80,8 @@ public class CmdLineInterface {
 		
 		// Ejecuta el programa sobre el archivo test.src y escribe el código generado
 		cli.exec(input);
+		
+		System.out.println("Output:");
 		System.out.println(cli.compiler.getCode());
 		
 	}

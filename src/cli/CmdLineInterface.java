@@ -78,7 +78,7 @@ public class CmdLineInterface {
 			e.printStackTrace();
 		}
 		
-		// Ejecuta el programa sobre el archivo test.src y escribe el código generado
+		// Ejecuta el programa sobre el archivo de entrada y escribe el código generado
 		cli.exec(input);
 		
 		System.out.println("Output:");

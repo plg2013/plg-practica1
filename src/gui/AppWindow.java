@@ -4,9 +4,14 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.File;
-
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
@@ -64,22 +69,22 @@ public class AppWindow implements ActionListener {
 		frmPlgEntrega.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmPlgEntrega.getContentPane().setLayout(null);
 
-		btnCargar = new JButton("Cargar");
+		btnCargar = new JButton("Cargar...");
 		btnCargar.addActionListener(this);
-		btnCargar.setBounds(16, 300, 99, 29);
+		btnCargar.setBounds(16, 311, 209, 29);
 		frmPlgEntrega.getContentPane().add(btnCargar);
 		
 		btnCompilar = new JButton("Compilar");
 		btnCompilar.addActionListener(this);
-		btnCompilar.setBounds(62, 341, 117, 29);
+		btnCompilar.setBounds(16, 351, 209, 29);
 		frmPlgEntrega.getContentPane().add(btnCompilar);
 
 		JLabel lblCodigo = new JLabel("C\u00F3digo");
-		lblCodigo.setBounds(16, 6, 200, 16);
+		lblCodigo.setBounds(16, 6, 200, 29);
 		frmPlgEntrega.getContentPane().add(lblCodigo);
 
 		JLabel lblMaquinaPila = new JLabel("M\u00E1quina Pila");
-		lblMaquinaPila.setBounds(468, 6, 200, 16);
+		lblMaquinaPila.setBounds(454, 6, 200, 29);
 		frmPlgEntrega.getContentPane().add(lblMaquinaPila);
 
 		JScrollPane scrollPaneCodigo = new JScrollPane();
@@ -91,7 +96,7 @@ public class AppWindow implements ActionListener {
 		scrollPaneCodigo.setViewportView(textAreaCodigo);
 
 		JScrollPane scrollPaneTablaSimbolos = new JScrollPane();
-		scrollPaneTablaSimbolos.setBounds(240, 34, 200, 364);
+		scrollPaneTablaSimbolos.setBounds(240, 34, 200, 367);
 		frmPlgEntrega.getContentPane().add(scrollPaneTablaSimbolos);
 
 		textAreaTablaSimbolos = new JTextArea();
@@ -100,7 +105,7 @@ public class AppWindow implements ActionListener {
 
 		JScrollPane scrollPaneMaquinaPila = new JScrollPane();
 		lblMaquinaPila.setLabelFor(scrollPaneMaquinaPila);
-		scrollPaneMaquinaPila.setBounds(452, 34, 216, 364);
+		scrollPaneMaquinaPila.setBounds(452, 34, 216, 323);
 		frmPlgEntrega.getContentPane().add(scrollPaneMaquinaPila);
 
 		textAreaMaquinaPila = new JTextArea();
@@ -109,7 +114,7 @@ public class AppWindow implements ActionListener {
 		scrollPaneMaquinaPila.setViewportView(textAreaMaquinaPila);
 
 		JScrollPane scrollPaneErrores = new JScrollPane();
-		scrollPaneErrores.setBounds(17, 410, 651, 150);
+		scrollPaneErrores.setBounds(17, 421, 651, 139);
 		frmPlgEntrega.getContentPane().add(scrollPaneErrores);
 
 		textAreaErrores = new JTextArea();
@@ -117,22 +122,17 @@ public class AppWindow implements ActionListener {
 
 		JLabel lblTablaDeSmbolos = new JLabel("Tabla de S\u00EDmbolos");
 		lblTablaDeSmbolos.setLabelFor(scrollPaneTablaSimbolos);
-		lblTablaDeSmbolos.setBounds(240, 6, 200, 16);
+		lblTablaDeSmbolos.setBounds(240, 6, 200, 29);
 		frmPlgEntrega.getContentPane().add(lblTablaDeSmbolos);
 
 		JLabel lblErrores = new JLabel("Errores");
 		lblErrores.setLabelFor(scrollPaneErrores);
-		lblErrores.setBounds(16, 382, 61, 16);
+		lblErrores.setBounds(16, 392, 61, 33);
 		frmPlgEntrega.getContentPane().add(lblErrores);
-		
-		btnCargar = new JButton("Cargar");
-		btnCargar.addActionListener(this);
-		btnCargar.setBounds(16, 300, 99, 29);
-		frmPlgEntrega.getContentPane().add(btnCargar);
 		
 		btnExportar = new JButton("Exportar");
 		btnExportar.addActionListener(this);
-		btnExportar.setBounds(127, 300, 98, 29);
+		btnExportar.setBounds(454, 369, 214, 29);
 		frmPlgEntrega.getContentPane().add(btnExportar);
 	}
 
@@ -154,34 +154,75 @@ public class AppWindow implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		
 		if (e.getSource() == btnCargar) {
 			
+			final JFileChooser chooser = new JFileChooser();
+			int ret = chooser.showOpenDialog(frmPlgEntrega);
 			
-			
-			
-			
-		} else if (e.getSource() == btnExportar) {
-			
-			// Exportar button onclick listener code
-			
-		} else if (e.getSource() == btnCompilar) {
-			
-			// Crea la app de consola que actuara en segundo plano
-			CmdLineInterface cli = new CmdLineInterface();
-			
-			// Ejecuta la cli con el texto introducido por el usuario
-			ANTLRInputStream input = new ANTLRInputStream(getTextAreaCodigo().getText());
-			cli.exec(input);
+			if (ret == JFileChooser.APPROVE_OPTION) {
+	        
+				File filename = chooser.getSelectedFile();
+				
+				FileReader filereader = null;
+				try {
+					filereader = new FileReader(filename);
+				} catch (FileNotFoundException e1) {
+					e1.printStackTrace();
+				}
+				
+				BufferedReader buffreader=new BufferedReader(filereader);    
+				try {
+					textAreaCodigo.read(buffreader, null);
+					buffreader.close();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}  
+				 
 					
-			// Muestra la informacion al usuario
-			textAreaTablaSimbolos.setText("");
-			textAreaTablaSimbolos.append(cli.getCompiler().getTS());
-			textAreaMaquinaPila.setText("");
-			textAreaMaquinaPila.append(cli.getCompiler().getCode());
-			textAreaErrores.setText("");
-			textAreaErrores.append(Logs.getErrorsLog());
+	            
+			}
+            
+            
+        } else if (e.getSource() == btnExportar) {
+                
+        	final JFileChooser chooser = new JFileChooser();
+			int ret = chooser.showOpenDialog(frmPlgEntrega);
 			
-			Logs.clear(); // Vacia los logs entre ejecuciones para evitar redundancia de info
-		}
+			if (ret == JFileChooser.APPROVE_OPTION) {
+	        
+				File filename = chooser.getSelectedFile();
+				
+				try {
+					FileWriter writer = new FileWriter(filename.toString(), false);
+					textAreaMaquinaPila.write(writer);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				
+			}
+        	
+        	
+        	
+                
+        } else if (e.getSource() == btnCompilar) {
+                
+                // Crea la app de consola que actuara en segundo plano
+                CmdLineInterface cli = new CmdLineInterface();
+                
+                // Ejecuta la cli con el texto introducido por el usuario
+                ANTLRInputStream input = new ANTLRInputStream(getTextAreaCodigo().getText());
+                cli.exec(input);
+                                
+                // Muestra la informacion al usuario
+                textAreaTablaSimbolos.setText("");
+                textAreaTablaSimbolos.append(cli.getCompiler().getTS());
+                textAreaMaquinaPila.setText("");
+                textAreaMaquinaPila.append(cli.getCompiler().getCode());
+                textAreaErrores.setText("");
+                textAreaErrores.append(Logs.getErrorsLog());
+                
+                Logs.clear(); // Vacia los logs entre ejecuciones para evitar redundancia de info
+        }
 	}
 }
